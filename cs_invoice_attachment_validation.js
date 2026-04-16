@@ -14,7 +14,7 @@ define([], function () {
             // log.debug('Sublists',sublists);
 
             // Standard Files subtab on transaction
-            var sublistId = 'media';
+            var sublistId = 'mediaitem';
             var lineCount = 0;
             var hasFile = false;
             var i, fileId;
