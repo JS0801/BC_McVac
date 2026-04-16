@@ -11,7 +11,6 @@ define(['N/search', 'N/currentRecord'], function(search, currentRecord) {
             var mode = recId ? 'edit' : 'create';
             var hasFile = false;
 
-            // EDIT MODE
             if (mode === 'edit') {
                 var invoiceSearchObj = search.create({
                     type: 'invoice',
