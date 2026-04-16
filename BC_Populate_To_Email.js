@@ -8,6 +8,7 @@ define(['N/search'], function(search) {
         if (context.type !== context.UserEventType.CREATE) return;
 
         var rec = context.newRecord;
+        log.debug('rec', rec)
         var transactionId = rec.getValue({ fieldId: 'transaction' });
         if (!transactionId) return;
 
