@@ -44,7 +44,6 @@ define(['N/search', 'N/log'], function(search, log) {
                     name: 'custentity_bc_contact_emails',
                     join: 'customerMain'
                 }) || '';
-
                 return false;
             });
 
@@ -52,30 +51,33 @@ define(['N/search', 'N/log'], function(search, log) {
                 return;
             }
 
-            var emailArr = emailString.split(';');
-            var cleanEmails = [];
-            var email = '';
+            var arr = emailString.split(';');
+            var uniqueEmails = [];
+            var seen = {};
             var i = 0;
+            var email = '';
 
-            for (i = 0; i < emailArr.length; i++) {
-                email = (emailArr[i] || '').replace(/^\s+|\s+$/g, '');
-                if (email && cleanEmails.indexOf(email) === -1) {
-                    cleanEmails.push(email);
+            for (i = 0; i < arr.length; i++) {
+                email = (arr[i] || '').replace(/^\s+|\s+$/g, '').toLowerCase();
+
+                if (email && !seen[email]) {
+                    seen[email] = true;
+                    uniqueEmails.push(email);
                 }
             }
 
-            if (cleanEmails.length === 0) {
+            if (uniqueEmails.length === 0) {
                 return;
             }
 
             rec.setValue({
                 fieldId: 'recipientemail',
-                value: cleanEmails.join('; ')
+                value: uniqueEmails[0]
             });
 
             log.debug({
-                title: 'To field updated',
-                details: cleanEmails.join('; ')
+                title: 'To email set',
+                details: uniqueEmails[0]
             });
 
         } catch (e) {
