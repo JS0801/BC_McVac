@@ -50,6 +50,9 @@ define(['N/search'], function(search) {
         var i = 0;
         var email = '';
 
+      var fields = rec.getSublistFields({ sublistId: 'otherrecipientslist' });
+    log.debug('available fields', fields);
+
         for (i = 0; i < lineCount; i++) {
             email = rec.getSublistValue({
                 sublistId: 'otherrecipientslist',
@@ -80,7 +83,7 @@ define(['N/search'], function(search) {
 
               rec.setSublistValue({
                     sublistId: 'otherrecipientslist',
-                    fieldId: 'cc',
+                    fieldId: 'to',
                     line: lineCount,
                     value: 'T'
                 });
