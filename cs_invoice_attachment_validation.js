@@ -4,6 +4,40 @@
  */
 define([], function () {
 
+      function validateLine(scriptContext) {
+        try {
+            var rec = scriptContext.currentRecord;
+            var sublistId = scriptContext.sublistId;
+
+            log.debug('Submitted Line Sublist ID: ' + sublistId);
+
+            // optional: log current line values for known sublists
+            if (sublistId === 'item') {
+                log.debug('Current Item:', rec.getCurrentSublistValue({
+                    sublistId: 'item',
+                    fieldId: 'item'
+                }));
+
+                log.debug('Current Quantity:', rec.getCurrentSublistValue({
+                    sublistId: 'item',
+                    fieldId: 'quantity'
+                }));
+            }
+
+            if (sublistId === 'mediaitem') {
+                log.debug('Current File Value:', rec.getCurrentSublistValue({
+                    sublistId: 'mediaitem',
+                    fieldId: 'mediaitem'
+                }));
+            }
+
+            return true;
+        } catch (e) {
+            log.debug('validateLine Error: ' + e.message);
+            return true;
+        }
+    }
+
     function saveRecord(context) {
         try {
             var rec = context.currentRecord;
@@ -56,6 +90,7 @@ define([], function () {
     }
 
     return {
-        saveRecord: saveRecord
+        saveRecord: saveRecord,
+      validateLine: validateLine
     };
 });
