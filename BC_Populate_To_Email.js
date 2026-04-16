@@ -137,7 +137,7 @@ define(['N/search', 'N/log'], function(search, log) {
                             sublistId: SUBLIST_ID,
                             fieldId: TYPE_FIELD_ID,
                             line: insertLine,
-                            value: true
+                            value: 'T'
                         });
                     } catch (e3) {}
 
