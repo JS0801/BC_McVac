@@ -80,7 +80,7 @@ define(['N/search'], function(search) {
 
               rec.setSublistValue({
                     sublistId: 'otherrecipientslist',
-                    fieldId: 'to',
+                    fieldId: 'cc',
                     line: lineCount,
                     value: 'T'
                 });
