@@ -2,16 +2,17 @@
  * @NApiVersion 2.1
  * @NScriptType UserEventScript
  */
-define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
+define(['N/search'], function(search) {
 
     function beforeLoad(context) {
         if (context.type !== context.UserEventType.CREATE) return;
 
         var rec = context.newRecord;
-        var form = context.form;
+        log.debug('rec', rec)
         var transactionId = rec.getValue({ fieldId: 'transaction' });
         if (!transactionId) return;
 
+        var emailString = '';
         var result = search.create({
             type: 'invoice',
             filters: [
@@ -36,7 +37,7 @@ define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
 
         if (!result || !result.length) return;
 
-        var emailString = result[0].getValue({
+        emailString = result[0].getValue({
             name: 'custentity_bc_contact_emails',
             join: 'customerMain'
         });
@@ -45,74 +46,32 @@ define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
 
         var emailArr = emailString.split(';');
         var added = {};
-        var sublistId = 'otherrecipientslist';
-        var emailFieldId = 'email';
-        var lineCount = rec.getLineCount({ sublistId: sublistId }) || 0;
+        var lineCount = rec.getLineCount({ sublistId: 'otherrecipientslist' }) || 0;
         var i = 0;
         var email = '';
 
-        for (i = 0; i < lineCount; i++) {
-            email = rec.getSublistValue({
-                sublistId: sublistId,
-                fieldId: emailFieldId,
-                line: i
-            });
-
-            if (email) {
-                added[email.toLowerCase().replace(/^\s+|\s+$/g, '')] = true;
-            }
-        }
+      var fields = rec.getSublistFields({ sublistId: 'otherrecipientslist' });
+      log.debug('available fields', fields);
 
         for (i = 0; i < emailArr.length; i++) {
-            email = (emailArr[i] || '').replace(/^\s+|\s+$/g, '');
-            if (!email) continue;
+            email = (emailArr[i] || '').replace(/^\s+|\s+$/g, '').toLowerCase();
 
-            var key = email.toLowerCase();
-            if (added[key]) continue;
+            if (email && !added[email]) {
+                rec.insertLine({
+                    sublistId: 'otherrecipientslist',
+                    line: lineCount
+                });
 
-            rec.insertLine({
-                sublistId: sublistId,
-                line: lineCount
-            });
-
-            rec.setSublistValue({
-                sublistId: sublistId,
-                fieldId: emailFieldId,
-                line: lineCount,
-                value: email
-            });
-
-            added[key] = true;
-            lineCount++;
+                rec.setSublistValue({
+                    sublistId: 'otherrecipientslist',
+                    fieldId: 'email',
+                    line: lineCount,
+                    value: email
+                });
+                added[email] = true;
+                lineCount++;
+            }
         }
-
-        var htmlField = form.addField({
-            id: 'custpage_to_dom_fix',
-            type: serverWidget.FieldType.INLINEHTML,
-            label: 'DOM Fix'
-        });
-
-        htmlField.defaultValue = ''
-            + '<script>'
-            + '(function(){'
-            + '  function setToCheckbox(){'
-            + '    try {'
-            + '      var rows = document.querySelectorAll("#otherrecipientslist_splits tr");'
-            + '      for (var i = 0; i < rows.length; i++) {'
-            + '        var emailCell = rows[i].querySelector(\'td[data-ns-tooltip="Email"]\');'
-            + '        var emailText = emailCell ? (emailCell.textContent || "").replace(/\\u00a0/g, "").trim() : "";'
-            + '        var toCheckbox = rows[i].querySelector(\'input[name="toRecipients"]\');'
-            + '        if (emailText && toCheckbox && !toCheckbox.checked) {'
-            + '          toCheckbox.click();'
-            + '        }'
-            + '      }'
-            + '    } catch (e) {}'
-            + '  }'
-            + '  setTimeout(setToCheckbox, 500);'
-            + '  setTimeout(setToCheckbox, 1000);'
-            + '  setTimeout(setToCheckbox, 1500);'
-            + '})();'
-            + '</script>';
     }
 
     return {
