@@ -56,14 +56,13 @@ define(['N/search', 'N/currentRecord'], function(search, currentRecord) {
 
             if (!hasFile) {
                 alert('Please attach at least one file before saving this Invoice.');
-                return false;
+                return true;
             }
 
             return true;
 
         } catch (e) {
-            alert('Error while validating attached files: ' + e.message);
-            return false;
+            log.error('Error while validating attached files: ' + e.message);
         }
     }
 
