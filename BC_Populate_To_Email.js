@@ -53,18 +53,6 @@ define(['N/search'], function(search) {
       var fields = rec.getSublistFields({ sublistId: 'otherrecipientslist' });
     log.debug('available fields', fields);
 
-        for (i = 0; i < lineCount; i++) {
-            email = rec.getSublistValue({
-                sublistId: 'otherrecipientslist',
-                fieldId: 'email',
-                line: i
-            });
-
-            if (email) {
-                added[email.toLowerCase().replace(/^\s+|\s+$/g, '')] = true;
-            }
-        }
-
         for (i = 0; i < emailArr.length; i++) {
             email = (emailArr[i] || '').replace(/^\s+|\s+$/g, '').toLowerCase();
 
@@ -81,12 +69,12 @@ define(['N/search'], function(search) {
                     value: email
                 });
 
-              rec.setSublistValue({
-                    sublistId: 'otherrecipientslist',
-                    fieldId: 'to',
-                    line: lineCount,
-                    value: 'T'
-                });
+              // rec.setSublistValue({
+              //       sublistId: 'otherrecipientslist',
+              //       fieldId: 'to',
+              //       line: lineCount,
+              //       value: 'T'
+              //   });
 
                 added[email] = true;
                 lineCount++;
