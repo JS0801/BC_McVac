@@ -70,12 +70,19 @@ define(['N/search'], function(search) {
                     line: lineCount
                 });
 
-                // rec.setSublistValue({
-                //     sublistId: 'otherrecipientslist',
-                //     fieldId: 'email',
-                //     line: lineCount,
-                //     value: email
-                // });
+                rec.setSublistValue({
+                    sublistId: 'otherrecipientslist',
+                    fieldId: 'email',
+                    line: lineCount,
+                    value: email
+                });
+
+              rec.setSublistValue({
+                    sublistId: 'otherrecipientslist',
+                    fieldId: 'to',
+                    line: lineCount,
+                    value: true
+                });
 
                 added[email] = true;
                 lineCount++;
