@@ -2,18 +2,59 @@
  * @NApiVersion 2.1
  * @NScriptType ClientScript
  */
-define([], function () {
+define(['N/search', 'N/currentRecord'], function(search, currentRecord) {
 
     function saveRecord(context) {
         try {
-            var table = document.getElementById('mediaitem_splits');
-            var attachedRows = [];
-            
-            if (table) {
-                attachedRows = table.querySelectorAll('tr[id^="mediaitem_row_"], tr[id^="mediaitemrow"]');
+            var rec = context.currentRecord;
+            var recId = rec.id;
+            var mode = recId ? 'edit' : 'create';
+            var hasFile = false;
+
+            // EDIT MODE
+            if (mode === 'edit') {
+                var invoiceSearchObj = search.create({
+                    type: 'invoice',
+                    filters: [
+                        ['type', 'anyof', 'CustInvc'],
+                        'AND',
+                        ['internalid', 'anyof', recId],
+                        'AND',
+                        ['file.internalidnumber', 'isnotempty', ''],
+                        'AND',
+                        ['mainline', 'is', 'T']
+                    ],
+                    columns: [
+                        search.createColumn({
+                            name: 'internalid',
+                            label: 'Internal ID'
+                        })
+                    ]
+                });
+
+                var searchResultCount = invoiceSearchObj.runPaged().count;
+                console.log('invoiceSearchObj result count: ' + searchResultCount);
+
+                if (searchResultCount > 0) {
+                    hasFile = true;
+                }
             }
 
-            if (!attachedRows || attachedRows.length === 0) {
+            // CREATE MODE
+            if (mode === 'create') {
+                var table = document.getElementById('mediaitem_splits');
+                var attachedRows = [];
+
+                if (table) {
+                    attachedRows = table.querySelectorAll('tr[id^="mediaitem_row_"], tr[id^="mediaitemrow"]');
+                }
+
+                if (attachedRows && attachedRows.length > 0) {
+                    hasFile = true;
+                }
+            }
+
+            if (!hasFile) {
                 alert('Please attach at least one file before saving this Invoice.');
                 return false;
             }
