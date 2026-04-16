@@ -7,6 +7,7 @@ define([], function () {
     function saveRecord(context) {
         try {
             var rec = context.currentRecord;
+            log.debug('rec', rec)
 
             // Standard Files subtab on transaction
             var sublistId = 'mediaitem';
