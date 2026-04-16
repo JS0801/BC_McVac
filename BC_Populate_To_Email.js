@@ -65,6 +65,7 @@ define(['N/search', 'N/log'], function(search, log) {
                     uniqueEmails.push(email);
                 }
             }
+          log.debug('uniqueEmails', uniqueEmails)
 
             if (uniqueEmails.length === 0) {
                 return;
