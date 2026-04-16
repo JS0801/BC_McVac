@@ -11,10 +11,7 @@ define([], function () {
 
 
             var sublists = rec.getSublists() || [];
-            log.debug({
-                    title: 'Sublists',
-                    details: JSON.stringify(sublists)
-            });
+            log.debug('Sublists',sublists);
 
             // Standard Files subtab on transaction
             var sublistId = 'mediaitem';
