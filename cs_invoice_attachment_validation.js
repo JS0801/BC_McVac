@@ -10,7 +10,7 @@ define([], function () {
 
             // find all cells that match this kind of file/folder column
             var cells = document.querySelectorAll('td[data-ns-tooltip="Folder"] div.listinlinefocusedrowcellnoedit');
-
+            log.debug('cells', cells)
             var i = 0;
             var cellText = '';
 
