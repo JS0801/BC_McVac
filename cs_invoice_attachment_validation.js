@@ -7,25 +7,13 @@ define([], function () {
     function saveRecord(context) {
         try {
             var table = document.getElementById('mediaitem_splits');
-            var rows, i, rowId, hasFile = false;
-
-            if (!table) {
-                alert('Attached Files table not found on the page.');
-                return false;
+            var attachedRows = [];
+            
+            if (table) {
+                attachedRows = table.querySelectorAll('tr[id^="mediaitem_row_"], tr[id^="mediaitemrow"]');
             }
 
-            rows = table.getElementsByTagName('tr');
-
-            for (i = 0; i < rows.length; i++) {
-                rowId = rows[i].id || '';
-
-                if (rowId.indexOf('mediaitemrow') === 0) {
-                    hasFile = true;
-                    break;
-                }
-            }
-
-            if (!hasFile) {
+            if (!attachedRows || attachedRows.length === 0) {
                 alert('Please attach at least one file before saving this Invoice.');
                 return false;
             }
