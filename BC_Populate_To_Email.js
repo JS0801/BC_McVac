@@ -81,7 +81,7 @@ define(['N/search'], function(search) {
                     sublistId: 'otherrecipientslist',
                     fieldId: 'to',
                     line: lineCount,
-                    value: true
+                    value: 'T'
                 });
 
                 added[email] = true;
