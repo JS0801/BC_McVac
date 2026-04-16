@@ -14,7 +14,7 @@ define([], function () {
             log.debug('Sublists',sublists);
 
             // Standard Files subtab on transaction
-            var sublistId = 'mediaitem';
+            var sublistId = 'media';
             var lineCount = 0;
             var hasFile = false;
             var i, fileId;
@@ -23,6 +23,7 @@ define([], function () {
                 lineCount = rec.getLineCount({
                     sublistId: sublistId
                 }) || 0;
+                log.debug('lineCount', lineCount)
             } catch (e) {
                 alert('Unable to validate attached files. Please contact admin.');
                 return false;
