@@ -6,21 +6,20 @@ define([], function () {
 
     function saveRecord(context) {
         try {
-            var hasFile = false;
+            var table = document.getElementById('mediaitem_splits');
+            var rows, i, rowId, hasFile = false;
 
-            // find all cells that match this kind of file/folder column
-            var cells = document.querySelectorAll('td[data-ns-tooltip="Folder"] div.listinlinefocusedrowcellnoedit');
-            log.debug('cells', cells)
-            var i = 0;
-            var cellText = '';
+            if (!table) {
+                alert('Attached Files table not found on the page.');
+                return false;
+            }
 
-            for (i = 0; i < cells.length; i++) {
-                cellText = cells[i].innerHTML || '';
+            rows = table.getElementsByTagName('tr');
 
-                // remove nbsp and spaces
-                cellText = cellText.replace(/&nbsp;/g, '').replace(/\s/g, '');
+            for (i = 0; i < rows.length; i++) {
+                rowId = rows[i].id || '';
 
-                if (cellText !== '') {
+                if (rowId.indexOf('mediaitemrow') === 0) {
                     hasFile = true;
                     break;
                 }
