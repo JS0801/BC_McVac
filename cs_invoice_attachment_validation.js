@@ -9,6 +9,13 @@ define([], function () {
             var rec = context.currentRecord;
             log.debug('rec', rec)
 
+
+            var sublists = rec.getSublists() || [];
+            log.debug({
+                    title: 'Sublists',
+                    details: JSON.stringify(sublists)
+            });
+
             // Standard Files subtab on transaction
             var sublistId = 'mediaitem';
             var lineCount = 0;
