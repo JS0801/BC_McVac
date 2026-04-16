@@ -51,35 +51,100 @@ define(['N/search', 'N/log'], function(search, log) {
                 return;
             }
 
-            var arr = emailString.split(';');
-            var uniqueEmails = [];
+            var sourceEmails = emailString.split(';');
+            var cleanEmails = [];
             var seen = {};
             var i = 0;
             var email = '';
 
-            for (i = 0; i < arr.length; i++) {
-                email = (arr[i] || '').replace(/^\s+|\s+$/g, '').toLowerCase();
+            // split + trim + remove duplicates from customer field
+            for (i = 0; i < sourceEmails.length; i++) {
+                email = (sourceEmails[i] || '').replace(/^\s+|\s+$/g, '').toLowerCase();
 
                 if (email && !seen[email]) {
                     seen[email] = true;
-                    uniqueEmails.push(email);
+                    cleanEmails.push(email);
                 }
             }
-          log.debug('uniqueEmails', uniqueEmails)
 
-            if (uniqueEmails.length === 0) {
+            if (cleanEmails.length === 0) {
                 return;
             }
 
-            rec.setValue({
-                fieldId: 'recipientemail',
-                value: uniqueEmails[0]
-            });
+            // =========================================
+            // CHANGE THESE IDS BASED ON YOUR SUBLIST
+            // =========================================
+            var SUBLIST_ID = 'otherrecipientslist';
+            var EMAIL_FIELD_ID = 'email';
+            var TYPE_FIELD_ID = 'to'; // optional, only if your sublist has type field
+            var TYPE_VALUE = 'To';    // optional
+            // =========================================
 
-            log.debug({
-                title: 'To email set',
-                details: uniqueEmails[0]
-            });
+            var existingEmails = {};
+            var lineCount = 0;
+            var existingEmail = '';
+            var insertLine = 0;
+
+            try {
+                lineCount = rec.getLineCount({
+                    sublistId: SUBLIST_ID
+                }) || 0;
+            } catch (e1) {
+                log.debug({
+                    title: 'Sublist not found',
+                    details: SUBLIST_ID
+                });
+                return;
+            }
+
+            // collect already existing emails from sublist
+            for (i = 0; i < lineCount; i++) {
+                try {
+                    existingEmail = rec.getSublistValue({
+                        sublistId: SUBLIST_ID,
+                        fieldId: EMAIL_FIELD_ID,
+                        line: i
+                    });
+
+                    existingEmail = (existingEmail || '').replace(/^\s+|\s+$/g, '').toLowerCase();
+
+                    if (existingEmail) {
+                        existingEmails[existingEmail] = true;
+                    }
+                } catch (e2) {}
+            }
+
+            insertLine = lineCount;
+
+            // add only non-duplicate emails
+            for (i = 0; i < cleanEmails.length; i++) {
+                if (!existingEmails[cleanEmails[i]]) {
+                    rec.insertLine({
+                        sublistId: SUBLIST_ID,
+                        line: insertLine
+                    });
+
+                    rec.setSublistValue({
+                        sublistId: SUBLIST_ID,
+                        fieldId: EMAIL_FIELD_ID,
+                        line: insertLine,
+                        value: cleanEmails[i]
+                    });
+
+                    // only use if this field exists on your sublist
+                    try {
+                        rec.setSublistValue({
+                            sublistId: SUBLIST_ID,
+                            fieldId: TYPE_FIELD_ID,
+                            line: insertLine,
+                            value: TYPE_VALUE
+                        });
+                    } catch (e3) {}
+
+                    existingEmails[cleanEmails[i]] = true;
+                    insertLine++;
+                }
+            }
 
         } catch (e) {
             log.error({
