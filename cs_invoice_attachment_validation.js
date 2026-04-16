@@ -10,8 +10,8 @@ define([], function () {
             log.debug('rec', rec)
 
 
-            var sublists = rec.getSublists() || [];
-            log.debug('Sublists',sublists);
+            // var sublists = rec.getSublists() || [];
+            // log.debug('Sublists',sublists);
 
             // Standard Files subtab on transaction
             var sublistId = 'media';
