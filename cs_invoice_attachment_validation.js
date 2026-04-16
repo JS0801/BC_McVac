@@ -37,8 +37,8 @@ define([], function () {
             }
 
             if (!hasFile) {
-                alert('Please attach at least one file before saving this Invoice.');
-                return false;
+                alert('Please attach file before saving this Invoice.');
+                return true;
             }
 
             return true;
