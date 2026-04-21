@@ -26,7 +26,7 @@ define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
             columns: [
                 search.createColumn({
                     name: 'custentity_bc_contact_emails',
-                    join: 'customerMain'
+                    join: 'customermain'
                 })
             ]
         }).run().getRange({
