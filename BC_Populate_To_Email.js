@@ -21,12 +21,12 @@ define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
                 'AND',
                 ['mainline', 'is', 'T'],
                 'AND',
-                ['customermain.custentity_bc_contact_emails', 'isnotempty', '']
+                ['customer.custentity_bc_contact_emails', 'isnotempty', '']
             ],
             columns: [
                 search.createColumn({
                     name: 'custentity_bc_contact_emails',
-                    join: 'customermain'
+                    join: 'customer'
                 })
             ]
         }).run().getRange({
@@ -38,7 +38,7 @@ define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
 
         var emailString = result[0].getValue({
             name: 'custentity_bc_contact_emails',
-            join: 'customermain'
+            join: 'customer'
         });
 
         if (!emailString) return;
