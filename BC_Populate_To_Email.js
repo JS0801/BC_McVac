@@ -38,7 +38,7 @@ define(['N/search', 'N/ui/serverWidget'], function(search, serverWidget) {
 
         var emailString = result[0].getValue({
             name: 'custentity_bc_contact_emails',
-            join: 'customerMain'
+            join: 'customermain'
         });
 
         if (!emailString) return;
